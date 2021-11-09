@@ -1,5 +1,5 @@
 # copy from image node:9-slim
-FROM node:9-slim
+FROM node
 
 # workdir create a dir to auto cd inside when call docker exer -it <containerName> bash
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package.json /app
 
 # install packages
-RUN npm install
+RUN yarn install
 
 # copy all files to /app
 COPY . /app/
