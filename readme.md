@@ -12,3 +12,37 @@
 | `docker push instintos/first-docker-repository:first-docker-tag`                   | push to Docker Hub                                                                                                                                                              |
 | `docker start second-docker-container`                                             | to start <i>second-docker-container</i>                                                                                                                                         |
 | `docker exec -it second-docker-container bash`                                     | to enter in <i>second-docker-container</i>                                                                                                                                      |
+
+## Outros comandos
+
+helps
+
+- docker --help
+- docker container --help
+- docker image --help
+- docker volume --help
+- docker network --help
+
+- docker --version => versão
+- docker info => infos
+
+### Container (docker container)
+
+- create -> cria (--name pra renomear)
+- run -> executa e cria se não existir (--name pra renomear)
+- rename -> renomeia
+
+- ls -> lista todos
+- ports -> lista as portas
+
+- rm -> remove
+- prune -> remove todos parados
+
+- start -> inicia
+- stop -> para
+- pause -> pausa
+- unpause -> despausa
+
+- inspect -> info
+- top -> lista os processos em execução
+- stats -> status de uso
