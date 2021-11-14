@@ -16,7 +16,6 @@ COPY . /app/
 # expose port 3000
 EXPOSE 3000
 
-
 # run code yarn start at cmd
 CMD [ "yarn", "start" ]
 

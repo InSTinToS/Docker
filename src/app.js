@@ -9,12 +9,12 @@ app.get("/users", (req, res) => {
   connection.query(getUserQuery, (error, results) => {
     if (error) res.json(error);
 
-    console.log(results);
-
-    const users = results.map((user) => ({
-      name: user.name,
-      id: user.id,
-    }));
+    const users =
+      results &&
+      results.map((user) => ({
+        name: user.name,
+        id: user.id,
+      }));
 
     res.json(users);
   });
