@@ -1,49 +1,43 @@
 version: "3.8"
 
-services:
-  db:
-    image: mysql:5.7
-    restart: always
-    env_file: ./.env
-    container_name: mysql-docker-container
-    ports:
-      - 3308:3306
-    command: --default-authentication-plugin=mysql_native_password
-    networks:
-      - mynetwork
-    expose:
-      - "3306"
-    volumes:
-      - ./db/config:/etc/mysql
-      - ./db/data:/var/lib/mysql
-      - ./db/backup:/data_backup/data
-    environment:
-      - MYSQL_USER=${USER}
-      - MYSQL_DATABASE=${DB}
-      - MYSQL_PASSWORD=${PASSWORD}
-      - MYSQL_ROOT_PASSWORD=${PASSWORD}
+networks:
+  my-network:
+    name: my-network
+    driver: bridge
 
-  app:
-    build: .
-    tty: true
-    restart: always
-    env_file: ./.env
-    stdin_open: true
-    container_name: node-docker-container
+services:
+  backend:
+    build: ./backend
+    container_name: backend-container
+    env_file:
+      - .env
     networks:
-      - mynetwork
+      - "my-network"
     ports:
       - "3000:3000"
-    expose:
-      - "3000"
     depends_on:
-      - db
+      - ${HOST}
+    volumes:
+      - ./backend/src:/app/backend/src
     environment:
       - DB=${DB}
       - USER=${USER}
       - HOST=${HOST}
       - PASSWORD=${PASSWORD}
 
-networks:
-  mynetwork:
-    driver: bridge
+  database:
+    image: mysql:5.7
+    container_name: database-container
+    env_file:
+      - .env
+    networks:
+      - "my-network"
+    volumes:
+      - ./backend/database/config:/etc/mysql
+      - ./backend/database/data:/var/lib/mysql
+      - ./backend/database/backup:/data_backup/data
+    environment:
+      - MYSQL_USER=${USER}
+      - MYSQL_DATABASE=${DB}
+      - MYSQL_PASSWORD=${PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${PASSWORD}
