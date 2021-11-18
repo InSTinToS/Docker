@@ -2,20 +2,21 @@
 FROM node:16-alpine3.12
 
 # workdir create a dir to auto cd inside when call docker exer -it <containerName> bash
-WORKDIR /app/backend/
+WORKDIR /app/frontend/
 
 # copy my packagejson to ./
-COPY package.json /app/backend/
+COPY package.json /app/frontend/
 
 # install packages
 RUN yarn install
 
 # copy all files to /app
-COPY . /app/backend/
+COPY . /app/frontend/
 
-# expose port BACKEND_PORT
-EXPOSE ${BACKEND_PORT}
+# expose port 3000 and 35729 for hot reload (websocket)
+EXPOSE 35729 
+EXPOSE 3000
 
 # run code yarn start at cmd
-CMD ["yarn", "start" ]
+CMD [ "yarn", "start" ]
 

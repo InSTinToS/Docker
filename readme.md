@@ -5,7 +5,7 @@
 ### Start
 
 1. fill file .env
-2. `docker-compose up --no-color --quiet-pull -d` (remove -d if you want to see logs)
+2. `docker-compose up --no-color --quiet-pull -d` (remove tags if you want to see logs)
 3. access http://localhost:3000/users
 
 ### Remove (in order to restart the process)

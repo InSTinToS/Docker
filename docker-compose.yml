@@ -6,25 +6,6 @@ networks:
     driver: bridge
 
 services:
-  backend:
-    build: ./backend
-    container_name: backend-container
-    env_file:
-      - .env
-    networks:
-      - "my-network"
-    ports:
-      - "3000:3000"
-    depends_on:
-      - ${HOST}
-    volumes:
-      - ./backend/src:/app/backend/src
-    environment:
-      - DB=${DB}
-      - USER=${USER}
-      - HOST=${HOST}
-      - PASSWORD=${PASSWORD}
-
   database:
     image: mysql:5.7
     container_name: database-container
@@ -41,3 +22,43 @@ services:
       - MYSQL_DATABASE=${DB}
       - MYSQL_PASSWORD=${PASSWORD}
       - MYSQL_ROOT_PASSWORD=${PASSWORD}
+  backend:
+    build: ./backend
+    container_name: backend-container
+    depends_on:
+      - database
+    env_file:
+      - .env
+    networks:
+      - "my-network"
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+    volumes:
+      - ./backend:/app/backend
+    environment:
+      - DB=${DB}
+      - USER=${USER}
+      - PASSWORD=${PASSWORD}
+      - BACKEND_PORT=${BACKEND_PORT}
+  frontend:
+    build: ./frontend
+    container_name: frontend-container
+    links: 
+      - backend
+    depends_on: 
+      - backend
+    networks: 
+      - "my-network"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/src:/app/frontend/src
+      - ./frontend/public:/app/frontend/public
+    # need chokidar in windows to hot reload
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+
+
+
+
