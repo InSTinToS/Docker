@@ -15,7 +15,7 @@ services:
       - "my-network"
     volumes:
       - ./backend/database/config:/etc/mysql
-      - ./backend/database/data:/var/lib/mysql
+      - ~/backend/database/data:/var/lib/mysql
       - ./backend/database/backup:/data_backup/data
     environment:
       - MYSQL_USER=${USER}
@@ -34,7 +34,8 @@ services:
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
     volumes:
-      - ./backend:/app/backend
+      - ./backend/src:/app/backend/src
+ 
     environment:
       - DB=${DB}
       - USER=${USER}
@@ -43,6 +44,8 @@ services:
   frontend:
     build: ./frontend
     container_name: frontend-container
+    env_file:
+      - .env
     links: 
       - backend
     depends_on: 
@@ -50,7 +53,7 @@ services:
     networks: 
       - "my-network"
     ports:
-      - "3000:3000"
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     volumes:
       - ./frontend/src:/app/frontend/src
       - ./frontend/public:/app/frontend/public

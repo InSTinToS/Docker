@@ -8,12 +8,17 @@ import { useState } from "react";
 function App() {
   const [users, setUsers] = useState();
 
+  const callBackend = async ({ name }) => {
+    const response = await axios.post("http://localhost:3001/users", {
+      name,
+    });
+
+    setUsers(response.data.users);
+  };
+
   const formik = useFormik({
-    initialValues: { name: "" },
-    onSubmit: async ({ name }) => {
-      const response = await axios.post("http://localhost:3001/users", name);
-      setUsers(response.users);
-    },
+    initialValues: { name: "initialName" },
+    onSubmit: callBackend,
   });
 
   return (
@@ -35,19 +40,18 @@ function App() {
             type="text"
             name="name"
             placeholder="Nome"
+            onBlur={formik.handleBlur}
             value={formik.values.name}
             onChange={formik.handleChange}
           />
 
-          <button type="submit">adicionar usuárisos</button>
+          <button type="submit">adicionar usuários</button>
         </form>
 
         <ul>
           {users?.map((user) => (
             <li>
-              {user.id}
-
-              {user.name}
+              {user.id} - {user.name}
             </li>
           ))}
         </ul>

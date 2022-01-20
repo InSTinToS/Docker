@@ -9,9 +9,13 @@ COPY package.json /app/backend/
 
 # install packages
 RUN yarn install
+RUN yarn global add nodemon
+RUN yarn global add dotenv
 
 # copy all files to /app
-COPY . /app/backend/
+COPY /src/ /app/backend/src/
+
+RUN yarn build
 
 # expose port BACKEND_PORT
 EXPOSE ${BACKEND_PORT}

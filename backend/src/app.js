@@ -1,50 +1,35 @@
+require("dotenv").config();
+
 const express = require("express");
 const connection = require("./db");
+var bodyParser = require("body-parser");
+const cors = require("cors");
+const { startDB } = require("./startDb");
 
 const app = express();
 
-const getUsersQuery = `SELECT * FROM users;`;
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-app.get("/users", (req, res) => {
-  connection.query(getUsersQuery, (error, results) => {
-    if (error) res.json(error);
-
-    const users =
-      results &&
-      results.map((user) => ({
-        name: user.name,
-        id: user.id,
-      }));
-
-    res.json(users);
-  });
-});
+startDB();
+console.log(process.env.USER);
 
 app.post("/users", (req, res) => {
   const userName = req.body.name;
 
-  const addUserQuery = `INSERT INTO users VALUES ("${userName}");`;
+  const getUsersQuery = `SELECT * FROM users;`;
+  const addUserQuery = `INSERT INTO users (name) VALUES ("${userName}");`;
 
   connection.query(addUserQuery, (error, results) => {
     if (error) res.json(error);
   });
 
   connection.query(getUsersQuery, (error, results) => {
-    if (error) res.json(error);
-
-    const users =
-      results &&
-      results.map((user) => ({
-        name: user.name,
-        id: user.id,
-      }));
-
-    res.json(users);
+    if (!results) res.json(error);
+    const users = results.map((user) => ({ name: user.name, id: user.id }));
+    res.json({ users });
   });
-});
-
-app.get("/", (req, res) => {
-  res.send("tst");
 });
 
 app.listen(process.env.BACKEND_PORT, () =>

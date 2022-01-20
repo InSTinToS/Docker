@@ -15,7 +15,7 @@ COPY . /app/frontend/
 
 # expose port 3000 and 35729 for hot reload (websocket)
 EXPOSE 35729 
-EXPOSE 3000
+EXPOSE ${FRONTEND_PORT}
 
 # run code yarn start at cmd
 CMD [ "yarn", "start" ]
